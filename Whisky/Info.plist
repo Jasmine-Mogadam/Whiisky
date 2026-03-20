@@ -54,9 +54,7 @@
 		</dict>
 	</array>
 	<key>SUFeedURL</key>
-	<string>https://data.getwhisky.app/appcast.xml</string>
-	<key>SUPublicEDKey</key>
-	<string>tnZFAvPUfCpM7Tr7Sx5gKRm6BUQQ6htJQeOMP44evms=</string>
+	<string>https://github.com/Jasmine-Mogadam/Whiisky/releases/latest/download/appcast.xml</string>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>

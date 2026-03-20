@@ -20,6 +20,12 @@ import Foundation
 import SemanticVersion
 
 public class WhiskyWineInstaller {
+    /// URL to download the Wine libraries tarball
+    public static let wineDownloadURL = "https://github.com/Jasmine-Mogadam/Whiisky/releases/latest/download/Libraries.tar.gz"
+
+    /// URL to check the remote Wine version
+    public static let wineVersionPlistURL = "https://github.com/Jasmine-Mogadam/Whiisky/releases/latest/download/WhiskyWineVersion.plist"
+
     /// The Whisky application folder
     public static let applicationFolder = FileManager.default.urls(
         for: .applicationSupportDirectory, in: .userDomainMask
@@ -61,7 +67,7 @@ public class WhiskyWineInstaller {
     }
 
     public static func shouldUpdateWhiskyWine() async -> (Bool, SemanticVersion) {
-        let versionPlistURL = "https://data.getwhisky.app/Wine/WhiskyWineVersion.plist"
+        let versionPlistURL = wineVersionPlistURL
         let localVersion = whiskyWineVersion()
 
         var remoteVersion: SemanticVersion?
