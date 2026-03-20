@@ -48,9 +48,14 @@ class Winetricks {
     static func runCommand(command: String, bottle: Bottle) async {
         guard let resourcesURL = Bundle.main.url(forResource: "cabextract", withExtension: nil)?
             .deletingLastPathComponent() else { return }
-        // swiftlint:disable:next line_length
         let wineName = Wine.wineBinary.lastPathComponent
-        let winetricksCmd = #"PATH=\"\#(WhiskyWineInstaller.binFolder.path):\#(resourcesURL.path(percentEncoded: false)):$PATH\" WINE=\#(wineName) WINEPREFIX=\"\#(bottle.url.path)\" \"\#(winetricksURL.path(percentEncoded: false))\" \#(command)"#
+        let binPath = WhiskyWineInstaller.binFolder.path
+        let resPath = resourcesURL.path(percentEncoded: false)
+        let tricksPath = winetricksURL.path(percentEncoded: false)
+        let winetricksCmd = #"PATH=\"\#(binPath):\#(resPath):$PATH\""#
+            + #" WINE=\#(wineName)"#
+            + #" WINEPREFIX=\"\#(bottle.url.path)\""#
+            + #" \"\#(tricksPath)\" \#(command)"#
 
         let script = """
         tell application "Terminal"

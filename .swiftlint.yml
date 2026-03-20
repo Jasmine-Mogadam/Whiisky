@@ -2,6 +2,9 @@ opt_in_rules:
   - force_unwrapping
   - file_header
 
+disabled_rules:
+  - file_length
+
 excluded:
   - .build
 

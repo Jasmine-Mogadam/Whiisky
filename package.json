@@ -1,0 +1,14 @@
+{
+  "name": "whiisky",
+  "private": true,
+  "scripts": {
+    "setup": "brew install swiftlint xcbeautify fswatch",
+    "dev": "sh scripts/dev.sh",
+    "build": "xcodebuild -scheme Whisky -configuration Release -destination 'platform=macOS' CODE_SIGN_IDENTITY='-' CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO build 2>&1 | xcbeautify",
+    "build:signed": "xcodebuild -scheme Whisky -configuration Release -destination 'platform=macOS' build 2>&1 | xcbeautify",
+    "start": "open $(xcodebuild -scheme Whisky -configuration Release -showBuildSettings 2>/dev/null | grep ' BUILT_PRODUCTS_DIR' | head -1 | awk '{print $3}')/Whisky.app",
+    "clean": "xcodebuild -scheme Whisky clean",
+    "lint": "swiftlint --strict",
+    "lint:fix": "swiftlint --fix"
+  }
+}
