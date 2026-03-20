@@ -27,6 +27,7 @@ struct BottleCreationView: View {
     @State private var newBottleURL: URL = UserDefaults.standard.url(forKey: "defaultBottleLocation")
                                            ?? BottleData.defaultBottleDir
     @State private var nameValid: Bool = false
+    @State private var installSteam: Bool = false
 
     @Environment(\.dismiss) private var dismiss
 
@@ -61,6 +62,8 @@ struct BottleCreationView: View {
                         }
                     }
                 }
+
+                Toggle("create.steam", isOn: $installSteam)
             }
             .formStyle(.grouped)
             .navigationTitle("create.title")
@@ -90,7 +93,8 @@ struct BottleCreationView: View {
     func submit() {
         newlyCreatedBottleURL = BottleVM.shared.createNewBottle(bottleName: newBottleName,
                                                                 winVersion: newBottleVersion,
-                                                                bottleURL: newBottleURL)
+                                                                bottleURL: newBottleURL,
+                                                                installSteam: installSteam)
         dismiss()
     }
 }

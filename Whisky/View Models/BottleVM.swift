@@ -37,7 +37,8 @@ final class BottleVM: ObservableObject, @unchecked Sendable {
         return bottles.filter { $0.isAvailable == true }.count
     }
 
-    func createNewBottle(bottleName: String, winVersion: WinVersion, bottleURL: URL) -> URL {
+    func createNewBottle(bottleName: String, winVersion: WinVersion, bottleURL: URL,
+                         installSteam: Bool = false) -> URL {
         let newBottleDir = bottleURL.appending(path: UUID().uuidString)
 
         Task.detached {
@@ -57,10 +58,24 @@ final class BottleVM: ObservableObject, @unchecked Sendable {
                 try await Wine.changeWinVersion(bottle: bottle, win: winVersion)
                 let wineVer = try await Wine.wineVersion()
                 bottle.settings.wineVersion = SemanticVersion(wineVer) ?? SemanticVersion(0, 0, 0)
+
+                if installSteam {
+                    do {
+                        let setupExe = try await SteamInstaller.download()
+                        try await SteamInstaller.install(setupExe: setupExe, bottle: bottle)
+                        try SteamInstaller.pinSteam(bottle: bottle)
+                    } catch {
+                        print("Failed to install Steam: \(error)")
+                    }
+                }
+
                 // Add record
                 await MainActor.run {
                     self.bottlesList.paths.append(newBottleDir)
                     self.loadBottles()
+                    if let newBottle = self.bottles.first(where: { $0.url == newBottleDir }) {
+                        newBottle.updateInstalledPrograms()
+                    }
                 }
             } catch {
                 print("Failed to create new bottle: \(error)")

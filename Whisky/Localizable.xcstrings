@@ -8572,6 +8572,16 @@
         }
       }
     },
+    "create.steam" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Install Steam"
+          }
+        }
+      }
+    },
     "create.win" : {
       "localizations" : {
         "ar" : {

@@ -9,12 +9,26 @@ build_and_run() {
   echo ""
   echo "==> Building..."
   # Kill previous instance
+  if [ -n "$APP_PID" ]; then
+    kill "$APP_PID" 2>/dev/null
+    wait "$APP_PID" 2>/dev/null
+  fi
   pkill -x Whisky 2>/dev/null
 
   if xcodebuild -scheme "$SCHEME" -configuration "$CONFIG" -destination 'platform=macOS' $SIGN_FLAGS build 2>&1 | xcbeautify; then
     APP_PATH=$(xcodebuild -scheme "$SCHEME" -configuration "$CONFIG" -showBuildSettings 2>/dev/null | grep ' BUILT_PRODUCTS_DIR' | head -1 | awk '{print $3}')/Whisky.app
-    echo "==> Launching $APP_PATH"
-    open "$APP_PATH"
+    # Run the binary directly so print() output appears in the terminal
+    "$APP_PATH/Contents/MacOS/Whisky" &
+    APP_PID=$!
+    sleep 1
+    # If the process died immediately, fall back to open
+    if ! kill -0 "$APP_PID" 2>/dev/null; then
+      echo "==> Direct launch failed, falling back to open"
+      APP_PID=""
+      open "$APP_PATH"
+    else
+      echo "==> Launched directly (stdout/stderr captured)"
+    fi
     echo "==> Watching for changes... (Ctrl+C to stop)"
   else
     echo "==> Build failed. Watching for changes..."
